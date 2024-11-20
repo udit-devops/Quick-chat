@@ -13,8 +13,9 @@ import { app, server } from "./socket/socket.js";
 dotenv.config();
 
 const __dirname = path.resolve();
-// PORT should be assigned after calling dotenv.config() because we need to access the env variables. Didn't realize while recording the video. Sorry for the confusion.
-const PORT = process.env.PORT || 5000;
+
+// Use process.env.PORT or fallback to a default value of 10000 (commonly used in Render)
+const PORT = process.env.PORT || 10000;
 
 app.use(express.json()); // to parse the incoming requests with JSON payloads (from req.body)
 app.use(cookieParser());
@@ -29,7 +30,8 @@ app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
 });
 
-server.listen(PORT, () => {
+// Ensure your server listens on all network interfaces
+server.listen(PORT, "0.0.0.0", () => {
 	connectToMongoDB();
-	console.log(`Server Running on port ${PORT}`);
+	console.log(`Server running on port ${PORT}`);
 });
